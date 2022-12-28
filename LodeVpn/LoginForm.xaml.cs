@@ -1,10 +1,16 @@
 ﻿using FireSharp;
 using FireSharp.Config;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
+using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,8 +19,10 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace LodeVpn
 {
@@ -23,13 +31,26 @@ namespace LodeVpn
     /// </summary>
     public partial class LoginForm : Window
     {
+        public static int Key = 102;
+
         private static LoginForm form;
+
         private FirebaseConfig config = new FirebaseConfig
         {
             AuthSecret = "TJBURMVXjCkdLPnhQoqOLkx2K8vG8fIdWxZmcm5K",
             BasePath = "https://vpnusersdb-default-rtdb.europe-west1.firebasedatabase.app/"
         };
         private FirebaseClient client;
+
+        public LoginForm(bool initialize)
+        {
+            form = this;
+
+            InitializeComponent();
+
+            client = new FirebaseClient(config);
+
+        }
 
         public LoginForm()
         {
@@ -38,15 +59,46 @@ namespace LodeVpn
             InitializeComponent();
 
             client = new FirebaseClient(config);
-            User user = new User();
-            user.Created = DateTime.Now;
-            user.UsedInternet = 1;
-            user.Name = "REALL";
-            user.DaysForFreePlan = DateTime.Now;
-            user.IsPremium = false;
-            user.Gmail = "SADASD@gmail.com";
-            user.Password = "123465";
-            var result = client.SetAsync(@"vpnusersdb/" + user.Name, user);
+
+            #region Remember me
+            using (StreamReader reader = new StreamReader("LogFiles.txt", false))
+            {
+                string boolean = reader.ReadLine();
+                string name = reader.ReadLine();
+                string password = reader.ReadLine();
+                if (boolean == "True")
+                {
+                    try
+                    {
+                        var response = client.GetAsync((@"vpnusersdb/" + name));
+                        User user = response.Result.ResultAs<User>();
+                        if(user.Password == password)
+                        {
+                            MainWindow mainWindow = new MainWindow(user);
+                            mainWindow.Show();
+                            Close();
+                        }
+                    }
+                    catch
+                    {
+
+                    }
+                }
+
+            }
+            #endregion
+
+            //User user = new User();
+            //user.Created = DateTime.Now;
+            //user.UsedInternet = 1;
+            //user.Name = "Bogdanqwe";
+            //user.DaysForFreePlan = DateTime.Now;
+            //user.IsPremium = true;
+            //user.Gmail = "SADASD@gmail.com";
+            //user.Password = "1234";
+            //user.DaysSubscibe = 30;
+            //user.DayBuySubcribe = new DateTime(2022,11,1);
+            //var result = client.SetAsync(@"vpnusersdb/" + "prem", user);
         }
 
         #region Interner connection
@@ -102,11 +154,12 @@ namespace LodeVpn
         #region Login button
         private void LoginBtn_Click(object sender, RoutedEventArgs e)
         {
+
+
             if (IsConnectedToInternet())
             {
                 try
                 {
-
                     var response = client.GetAsync((@"vpnusersdb/" + txtUser.Text));
                     User user = response.Result.ResultAs<User>();
                     if (user != null)
@@ -116,12 +169,15 @@ namespace LodeVpn
                             textInvalid.Visibility = Visibility.Collapsed;
                             textInvalid.Foreground = System.Windows.Media.Brushes.LightGreen;
                             textInvalid.Text = "Succefull!";
-                            using (StreamWriter writer = new StreamWriter("cookieFiles.txt", false))
+                            if (checkBoxRememberMe.IsChecked == true)
                             {
-                                writer.WriteLine("True");
-                                writer.WriteLine(user.Name);
+                                using (StreamWriter writer = new StreamWriter("LogFiles.txt", false))
+                                {
+                                    writer.WriteLine("True");
+                                    writer.WriteLine(user.Name);
+                                    writer.WriteLine(user.Password);
+                                }
                             }
-               
                             MainWindow main = new MainWindow(user);
                             main.Show();
                             Close();
@@ -152,7 +208,54 @@ namespace LodeVpn
                 textInvalid.Visibility = Visibility.Visible;
                 textInvalid.Text = "No internet connection!";
             }
-           
+
+        }
+        #endregion
+
+       
+  
+
+
+    #region Encrypt Decrypt
+
+    public static byte[] RSAEncrypt(byte[] DataToEncrypt, RSAParameters RSAKeyInfo, bool DoOAEPPadding)
+    {
+        try
+        {
+            byte[] encryptedData;
+            using (RSACryptoServiceProvider RSA = new RSACryptoServiceProvider())
+            {
+                RSA.ImportParameters(RSAKeyInfo);
+                encryptedData = RSA.Encrypt(DataToEncrypt, DoOAEPPadding);
+            }
+            return encryptedData;
+        }
+        catch (CryptographicException e)
+        {
+            Console.WriteLine(e.Message);
+
+            return null;
+        }
+    }
+
+        public static byte[] RSADecrypt(byte[] DataToDecrypt, RSAParameters RSAKeyInfo, bool DoOAEPPadding)
+        {
+            try
+            {
+                byte[] decryptedData;
+                using (RSACryptoServiceProvider RSA = new RSACryptoServiceProvider())
+                {
+                    RSA.ImportParameters(RSAKeyInfo);
+                    decryptedData = RSA.Decrypt(DataToDecrypt, DoOAEPPadding);
+                }
+                return decryptedData;
+            }
+            catch (CryptographicException e)
+            {
+                Console.WriteLine(e.ToString());
+
+                return null;
+            }
         }
         #endregion
 
@@ -167,4 +270,5 @@ namespace LodeVpn
         }
         #endregion
     }
+
 }

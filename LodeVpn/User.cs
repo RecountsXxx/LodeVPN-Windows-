@@ -15,5 +15,7 @@ namespace LodeVpn
         public bool IsPremium { get; set; }
    public int UsedInternet { get; set; }
         public DateTime DaysForFreePlan { get; set; }
+        public int DaysSubscibe { get; set; }
+        public DateTime DayBuySubcribe { get; set; }
     }
 }

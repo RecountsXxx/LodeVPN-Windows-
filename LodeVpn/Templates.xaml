@@ -519,4 +519,48 @@
         </Setter>
     </Style>
 
+
+
+    <ControlTemplate TargetType="Button" x:Key="loginButton">
+        <Border x:Name="borderBtn" BorderBrush="Gray" CornerRadius="15" Background="Gray">
+            <TextBlock Foreground="White" FontSize="16" Text="Login" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="true">
+                <Setter TargetName="borderBtn" Property="BorderThickness" Value="0"></Setter>
+            </Trigger>
+            <EventTrigger RoutedEvent="Button.Click">
+                <EventTrigger.Actions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="borderBtn" Storyboard.TargetProperty="Opacity" From="1" To="0.20" Duration="0:0:0.2" AutoReverse="True"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger.Actions>
+            </EventTrigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+
+    <ControlTemplate TargetType="Button" x:Key="ugradeButton">
+        <Border x:Name="borderBtn" BorderBrush="LightGreen" CornerRadius="15" Background="LightGreen">
+            <TextBlock Foreground="White" FontSize="16" Text="Upgrade" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="true">
+                <Setter TargetName="borderBtn" Property="BorderThickness" Value="0"></Setter>
+            </Trigger>
+            <EventTrigger RoutedEvent="Button.Click">
+                <EventTrigger.Actions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="borderBtn" Storyboard.TargetProperty="Opacity" From="1" To="0.20" Duration="0:0:0.2" AutoReverse="True"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger.Actions>
+            </EventTrigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
 </ResourceDictionary>

@@ -8,13 +8,13 @@
         Closed="Window_Closed"
         MouseDown="Drag"
            d:DataContext="{d:DesignData MainWindow}"
-        Title="Lode VPN" Icon="Images/LogoIcons.ico"  WindowStartupLocation="CenterScreen" ResizeMode="NoResize" WindowStyle="None" Height="400" Width="500">
+        Title="Lode VPN" Icon="Images/LogoIcons.ico" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" WindowStyle="None" Height="400" Width="500">
     <Window.Resources>
     </Window.Resources>
     <Grid Background="#FF1C2328">
 
-        <TabControl TabStripPlacement="Left" Background="#FF1C2328" BorderBrush="#FF1C2328">
-            <TabItem Template="{StaticResource tabItemTemplate}"   Margin="0,20,0,-40" >
+        <TabControl x:Name="tabControl" TabStripPlacement="Left" Background="#FF1C2328" BorderBrush="#FF1C2328">
+            <TabItem Template="{StaticResource tabItemTemplate}"   Margin="0,25,2,-41" >
                 <TabItem.Background>
                     <ImageBrush Stretch="Uniform" ImageSource="Images/home.png"></ImageBrush>
                 </TabItem.Background>
@@ -50,7 +50,7 @@
                             <TextBlock Grid.Column="0" Grid.Row="0" FontSize="16" x:Name="ipAdressTextTwo" Text="    Public IP: "  Foreground="White" FontFamily="Cascadia Code" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
                             <Label VerticalAlignment="Top"  Name="disconConnecLabel" HorizontalAlignment="Left" Content="Disconnected" FontSize="14" FontFamily="Cascadia Code" Foreground="#FFFC4A4A" Margin="157,17,0,0" Grid.ColumnSpan="2" Height="23" Grid.Row="2"/>
                             <RadioButton  x:Name="disconnectRadioBtn" Template="{StaticResource radioButtonTemplate}" Background="Red" IsChecked="True" HorizontalAlignment="Left" VerticalAlignment="Top"  Height="14" Width="14" Margin="117,61,0,0" Grid.Row="1"/>
-                            <ToggleButton IsChecked="False" x:Name="onOffButton" Click="OnOffVpn_Click" Style="{StaticResource styleToggleButton}" VerticalAlignment="Top"   Grid.Row="1" Margin="103,97,104,0" Grid.ColumnSpan="2" Height="65" Grid.RowSpan="3" >
+                            <ToggleButton  IsChecked="False" x:Name="onOffButton" Click="OnOffVpn_Click" Style="{StaticResource styleToggleButton}" VerticalAlignment="Top"   Grid.Row="1" Margin="103,97,104,0" Grid.ColumnSpan="2" Height="65" Grid.RowSpan="3" >
                                 <ToggleButton.RenderTransform>
                                     <TransformGroup>
                                         <ScaleTransform ScaleY="-1"/>
@@ -62,6 +62,7 @@
                             </ToggleButton>
                             <RadioButton x:Name="connectRadioBtn" Template="{StaticResource radioButtonTemplate}" Background="AliceBlue" IsChecked="True" HorizontalAlignment="Left" VerticalAlignment="Top" Height="15" Width="16" Margin="83,61,0,0" Grid.Row="1" RenderTransformOrigin="1.182,0.844" Grid.Column="1"/>
                             <Label Grid.Row="3" VerticalAlignment="Top"  x:Name="timerLabel" HorizontalAlignment="Left" FontSize="14" FontFamily="Cascadia Code" Foreground="White" Margin="132,0,0,0" Grid.ColumnSpan="2" Height="26" Width="158"/>
+                            <TextBlock Grid.Column="0" Visibility="Hidden" x:Name="trailTextBlock" Grid.Row="0" FontSize="16"   Text="Your trial period is ended."  Foreground="OrangeRed" FontFamily="Cascadia Code" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,84,25" Grid.ColumnSpan="2"/>
                         </Grid>
 
 
@@ -69,25 +70,40 @@
                     <Border Grid.Row="2" Background="#FF293036">
 
 
-                        <ComboBox  Text="Press any key" SelectionChanged="comboBoxHostName_SelectionChanged" Background="#FF293036" BorderBrush="#FF293036" x:Name="comboBoxHostName" Margin="0,0,0,3">
-                            <ComboBoxItem Background="#FF293036">
-                                <Border>
-                                    <Grid>
-                                        <Image HorizontalAlignment="Left" Stretch="Uniform" Grid.Column="0" Width="50" Height="25" Source="\Images\poland.png"></Image>
-                                        <Label  Grid.Column="1" Foreground="White" VerticalAlignment="Top" FontSize="18" Content="        PL - Warsaw"></Label>
-                                        <Label Grid.Column="3" HorizontalAlignment="Right" BorderBrush="GreenYellow"  Foreground="GreenYellow" VerticalAlignment="Top" FontSize="18" Content="FREE"></Label>
-                                    </Grid>
-                                </Border>
-                            </ComboBoxItem>
-                            <ComboBoxItem Background="#FF293036">
+                        <ComboBox   SelectionChanged="comboBoxHostName_SelectionChanged" Background="#FF293036" BorderBrush="#FF293036" x:Name="comboBoxHostName" Margin="0,0,0,3">
+                            <ComboBoxItem x:Name="premiumHost0" Background="#FF293036">
                                 <Border>
                                     <Grid>
                                         <Image HorizontalAlignment="Left" Stretch="Uniform" Grid.Column="0" Width="50" Height="25" Source="\Images\germany.png"></Image>
                                         <Label  Grid.Column="1" Foreground="White" VerticalAlignment="Top" FontSize="18" Content="        DE - Berlin"></Label>
-                                        <Label Grid.Column="3" HorizontalAlignment="Right" BorderBrush="GreenYellow"  Foreground="GreenYellow" VerticalAlignment="Top" FontSize="18" Content="FREE"></Label>
+                                        <Label Grid.Column="3" HorizontalAlignment="Right" BorderBrush="Yellow"  Foreground="Yellow" VerticalAlignment="Top" FontSize="18" Content="PREMIUM"></Label>
                                     </Grid>
                                 </Border>
                             </ComboBoxItem>
+                            <ComboBoxItem x:Name="premiumHost1" Background="#FF293036">
+                                <Border>
+                                    <Grid>
+                                        <Image HorizontalAlignment="Left" Stretch="Uniform" Grid.Column="0" Width="50" Height="25" Source="\Images\france.png"></Image>
+                                        <Label  Grid.Column="1" Foreground="White" VerticalAlignment="Top" FontSize="18" Content="        FR - Paris"></Label>
+                                        <Label Grid.Column="3" HorizontalAlignment="Right" BorderBrush="Yellow"  Foreground="Yellow" VerticalAlignment="Top" FontSize="18" Content="PREMIUM"></Label>
+                                    </Grid>
+                                </Border>
+                            </ComboBoxItem>
+                            <ComboBoxItem  x:Name="premiumHost2" Background="#FF293036">
+                                <Border>
+                                    <Grid>
+                                        <Image HorizontalAlignment="Left" Stretch="Uniform" Grid.Column="0" Width="50" Height="25" Source="\Images\france.png"></Image>
+                                        <Label  Grid.Column="1" Foreground="White" VerticalAlignment="Top" FontSize="18" Content="        FR - Marseille"></Label>
+                                        <Label Grid.Column="3" HorizontalAlignment="Right" BorderBrush="Yellow"  Foreground="Yellow" VerticalAlignment="Top" FontSize="18" Content="PREMIUM"></Label>
+                                    </Grid>
+                                </Border>
+                            </ComboBoxItem>
+
+
+
+
+
+
                             <ComboBoxItem Background="#FF293036">
                                 <Border>
                                     <Grid>
@@ -127,17 +143,8 @@
                             <ComboBoxItem Background="#FF293036">
                                 <Border>
                                     <Grid>
-                                        <Image HorizontalAlignment="Left" Stretch="Uniform" Grid.Column="0" Width="50" Height="25" Source="\Images\france.png"></Image>
-                                        <Label  Grid.Column="1" Foreground="White" VerticalAlignment="Top" FontSize="18" Content="        FR - Paris"></Label>
-                                        <Label Grid.Column="3" HorizontalAlignment="Right" BorderBrush="GreenYellow"  Foreground="GreenYellow" VerticalAlignment="Top" FontSize="18" Content="FREE"></Label>
-                                    </Grid>
-                                </Border>
-                            </ComboBoxItem>
-                            <ComboBoxItem Background="#FF293036">
-                                <Border>
-                                    <Grid>
-                                        <Image HorizontalAlignment="Left" Stretch="Uniform" Grid.Column="0" Width="50" Height="25" Source="\Images\france.png"></Image>
-                                        <Label  Grid.Column="1" Foreground="White" VerticalAlignment="Top" FontSize="18" Content="        FR - Marseille"></Label>
+                                        <Image HorizontalAlignment="Left" Stretch="Uniform" Grid.Column="0" Width="50" Height="25" Source="\Images\poland.png"></Image>
+                                        <Label  Grid.Column="1" Foreground="White" VerticalAlignment="Top" FontSize="18" Content="        PL - Warsaw"></Label>
                                         <Label Grid.Column="3" HorizontalAlignment="Right" BorderBrush="GreenYellow"  Foreground="GreenYellow" VerticalAlignment="Top" FontSize="18" Content="FREE"></Label>
                                     </Grid>
                                 </Border>
@@ -154,7 +161,7 @@
 
 
 
-            <TabItem Template="{StaticResource tabItemTemplate}"   Margin="1,56,-1,-76" >
+            <TabItem Template="{StaticResource tabItemTemplate}"     Margin="0,56,2,-72" >
                 <TabItem.Background>
                     <ImageBrush Stretch="Uniform" ImageSource="/Images/settings.png"/>
                 </TabItem.Background>
@@ -181,21 +188,22 @@
                                 <RowDefinition/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
-                            <TextBlock FontSize="16" Foreground="Gray" VerticalAlignment="Center" Text="Launch app with Windows" Margin="5,0,169,0"></TextBlock>
-                            <ToggleButton Margin="352,22,10,13"></ToggleButton>
-                            <TextBlock FontSize="16" Foreground="Gray" VerticalAlignment="Center" Text="Launch app with Windows" Margin="5,0,169,0" Grid.Row="1"/>
-                            <ToggleButton Margin="352,22,10,13" Grid.Row="1"/>
-                            <TextBlock FontSize="16" Foreground="Gray" VerticalAlignment="Center" Text="Launch app with Windows" Margin="5,0,169,0" Grid.Row="2"/>
+                            <TextBlock  FontSize="16" Foreground="LightGray" VerticalAlignment="Center" Text="Launch app with Windows" Margin="10,0,169,0"></TextBlock>
+                            <ToggleButton x:Name="LaunchAppWitStart" Margin="352,22,10,13" Click="LaunchAppWitStart_Click"></ToggleButton>
+                            <TextBlock  FontSize="16" Foreground="LightGray" VerticalAlignment="Center" Text="Save me" Margin="10,0,169,0" Grid.Row="1"/>
+                            <ToggleButton x:Name="SaveMeToggleButton" Margin="352,22,10,13" Grid.Row="1" Click="SaveMeToggleButton_Click" />
+                            <TextBlock  FontSize="16" Foreground="LightGray" VerticalAlignment="Center" Text="Add setting" Margin="10,0,169,0" Grid.Row="2"/>
                             <ToggleButton Margin="352,22,10,13" Grid.Row="2"/>
-                            <TextBlock FontSize="16" Foreground="Gray" VerticalAlignment="Center" Text="Launch app with Windows" Margin="5,0,169,0" Grid.Row="3"/>
-                            <ToggleButton Margin="352,22,10,13" Grid.Row="3"/>
-                            <TextBlock FontSize="16" Foreground="Gray" VerticalAlignment="Center" Text="Launch app with Windows" Margin="5,0,169,0" Grid.Row="4"/>
-                            <ToggleButton Margin="352,22,10,13" Grid.Row="4"/>
+                            <TextBlock  FontSize="16" Foreground="LightGray" VerticalAlignment="Center" Text="Add setting" Margin="10,0,169,0" Grid.Row="3"/>
+                            <ToggleButton Margin="352,22,10,13" Grid.Row="3" />
+                            <TextBlock  FontSize="16" Foreground="LightGray" VerticalAlignment="Center" Text="Add setting" Margin="10,0,169,0" Grid.Row="4"/>
+                            <ToggleButton Margin="352,22,10,13" Grid.Row="4" />
+
                         </Grid>
                     </Border>
                 </Grid>
             </TabItem>
-            <TabItem Template="{StaticResource tabItemTemplate}"  Margin="1,102,-1,-122" >
+            <TabItem Template="{StaticResource tabItemTemplate}"    Margin="0,86,2,-102" >
                 <TabItem.Background>
                     <ImageBrush Stretch="Uniform" ImageSource="/Images/user.png"/>
                 </TabItem.Background>
@@ -225,18 +233,18 @@
                                 <RowDefinition Height="*"/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
-                            <TextBlock x:Name="loginAccount"  Grid.Row="0" VerticalAlignment="Center" FontSize="16" Margin="12,0,0,0" Foreground="Gray" Text="bohdankomp228@gmail.com"></TextBlock>
-                            <TextBlock x:Name="planAccount" Grid.Row="1" VerticalAlignment="Center" FontSize="16" Foreground="Gray" Margin="12,0,0,0" Text="Plan: Free plan"></TextBlock>
+                            <TextBlock x:Name="loginAccount"  Grid.Row="0" VerticalAlignment="Center" FontSize="16" Margin="12,0,0,0" Foreground="LightGray" Text="bohdankomp228@gmail.com"></TextBlock>
+                            <TextBlock x:Name="planAccount" Grid.Row="1" VerticalAlignment="Center" FontSize="16" Foreground="LightGray" Margin="12,0,0,0" Text="Plan: Free plan"></TextBlock>
                             <TextBlock x:Name="expiresAccount" Grid.Row="2" VerticalAlignment="Center" FontSize="16" Foreground="LightGreen" Margin="12,0,0,0" Text="Expires on: December 31, 2022"></TextBlock>
-                            <TextBlock x:Name="usedAccount" Grid.Row="3" VerticalAlignment="Center" FontSize="16" Foreground="Gray" Margin="12,0,0,0" Text="This month used 4 MB out of 10GB."></TextBlock>
+                            <TextBlock x:Name="usedAccount" Grid.Row="3" VerticalAlignment="Center" FontSize="16" Foreground="LightGray" Margin="12,0,0,0" Text="This month used 4 MB out of 10GB."></TextBlock>
                             <TextBlock Grid.Row="4" VerticalAlignment="Center" FontSize="13" Foreground="Wheat" Text="If you buy a subscription from Lode VPN, then the IP addresses will be  protected, your subscription purchase is valid on all platforms." Margin="13,0,0,0" TextWrapping="WrapWithOverflow" Height="50"></TextBlock>
-                            <Button Grid.Row="4"  Content="Upgrade" Background="LightGreen" Margin="117,41,143,0" Grid.RowSpan="2"></Button>
+                            <Button x:Name="upgradeBtn" Grid.Row="4" Template="{StaticResource ugradeButton}"  Content="Upgrade" Background="LightGreen" Margin="117,41,143,0" Grid.RowSpan="2" Click="upgradeBtn_Click"></Button>
                         </Grid>
                     </Border>
                     <Border Grid.Row="2" Background="#FF293036"></Border>
                 </Grid>
             </TabItem>
-            <TabItem Template="{StaticResource tabItemTemplate}"  Margin="2,145,-2,-165" >
+            <TabItem Template="{StaticResource tabItemTemplate}"  Margin="0,120,2,-136" >
                 <TabItem.Background>
                     <ImageBrush Stretch="Uniform" ImageSource="/Images/info.png"/>
                 </TabItem.Background>
@@ -264,18 +272,18 @@
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
                             <TextBlock Margin="10,0,5,7" FontSize="15" Grid.Row="0" Text="Lode VPN is a program created by a developer named Bogdan Kapriyan
-Made for online security, for anonymity on the web, has a pretty good internet speed, servers on all continents except Antarctica and Africa) If you like my product, you can write to Gmail, I will issue a premium account)" Foreground="Gray" TextWrapping="WrapWithOverflow"/>
+Made for online security, for anonymity on the web, has a pretty good internet speed, servers on all continents except Antarctica and Africa) If you like my product, you can write to Gmail, I will issue a premium account)" Foreground="LightGray" TextWrapping="WrapWithOverflow"/>
 
-                            <TextBlock Margin="10,5,5,5" FontSize="18"  Foreground="Gray" Grid.Row="1" Text="Version 1.0.0"></TextBlock>
-                            <TextBlock Margin="10,0,5,5" Cursor="Hand" FontSize="18"  Foreground="Gray" Grid.Row="2" Text="Follow me"></TextBlock>
-                            <TextBlock  MouseDown="TextBlock_Telegram" Cursor="Hand" FontSize="18"  Foreground="Gray" Grid.Row="2" Text="Telegram : t.me/LodeVPN" Margin="10,34,152,46"></TextBlock>
-                            <TextBlock  MouseDown="TextBlock_Gmail" Cursor="Hand" FontSize="18"  Foreground="Gray" Grid.Row="2" Text="Site : BogdanKapriyanUA@gmail.com" Margin="10,67,88,10"></TextBlock>
+                            <TextBlock Margin="10,5,5,5" FontSize="18"  Foreground="LightGray" Grid.Row="1" Text="Version 1.0.0"></TextBlock>
+                            <TextBlock Margin="10,0,5,5" Cursor="Hand" FontSize="18"  Foreground="LightGray" Grid.Row="2" Text="Follow me"></TextBlock>
+                            <TextBlock  MouseDown="TextBlock_Telegram" Cursor="Hand" FontSize="18"  Foreground="LightGray" Grid.Row="2" Text="Telegram : t.me/LodeVPN" Margin="10,34,152,46"></TextBlock>
+                            <TextBlock  MouseDown="TextBlock_Gmail" Cursor="Hand" FontSize="18"  Foreground="LightGray" Grid.Row="2" Text="Site : BogdanKapriyanUA@gmail.com" Margin="10,67,88,10"></TextBlock>
                         </Grid>
 
                     </Border>
                 </Grid>
             </TabItem>
-            <TabItem Template="{StaticResource tabItemTemplate}"  Margin="1,188,-1,-208" MouseLeftButtonUp="TabItem_MouseLeftButtonUp" >
+            <TabItem Template="{StaticResource tabItemTemplate}" Margin="2,152,0,-168" MouseLeftButtonUp="TabItem_MouseLeftButtonUp" >
                 <TabItem.Background>
                     <ImageBrush Stretch="Uniform" ImageSource="/Images/exit.png"/>
                 </TabItem.Background>
