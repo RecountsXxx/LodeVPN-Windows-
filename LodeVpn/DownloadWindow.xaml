@@ -1,0 +1,12 @@
+﻿<Window x:Class="LodeVpn.DownloadWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LodeVpn"
+        mc:Ignorable="d"
+ Title="Lode VPN" Icon="Images/LogoIcons.ico" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" WindowStyle="None" Height="400" Width="500">
+    <Grid Background="#FF293036">
+        <Image Width="350" Height="350" Source="Images\Logo.png" Margin="75,10,75,40"></Image>
+    </Grid>
+</Window>

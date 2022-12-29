@@ -22,6 +22,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace LodeVpn
@@ -31,6 +32,13 @@ namespace LodeVpn
     /// </summary>
     public partial class LoginForm : Window
     {
+        MainWindow mainWindow;
+        DownloadWindow downloadWindow = new DownloadWindow();
+
+
+        private DispatcherTimer timer = new DispatcherTimer(DispatcherPriority.Send);
+        private DispatcherTimer timerLoadingLogin = new DispatcherTimer(DispatcherPriority.Send);
+
         public static int Key = 102;
 
         private static LoginForm form;
@@ -54,6 +62,12 @@ namespace LodeVpn
 
         public LoginForm()
         {
+
+            timer.Interval = TimeSpan.FromSeconds(6);
+            timer.Tick += Timer_Tick;
+
+            timerLoadingLogin.Interval = TimeSpan.FromSeconds(2);
+            timerLoadingLogin.Tick += TimerLoading_Tick;
             form = this;
 
             InitializeComponent();
@@ -61,31 +75,42 @@ namespace LodeVpn
             client = new FirebaseClient(config);
 
             #region Remember me
-            using (StreamReader reader = new StreamReader("LogFiles.txt", false))
+
+            if (File.Exists("LogFiles.txt"))
             {
-                string boolean = reader.ReadLine();
-                string name = reader.ReadLine();
-                string password = reader.ReadLine();
-                if (boolean == "True")
+                using (StreamReader reader = new StreamReader("LogFiles.txt", false))
                 {
-                    try
+                    string boolean = reader.ReadLine();
+                    string name = reader.ReadLine();
+                    string password = reader.ReadLine();
+                    if (boolean == "True")
                     {
-                        var response = client.GetAsync((@"vpnusersdb/" + name));
-                        User user = response.Result.ResultAs<User>();
-                        if(user.Password == password)
+                        try
                         {
-                            MainWindow mainWindow = new MainWindow(user);
-                            mainWindow.Show();
-                            Close();
+                            var response = client.GetAsync((@"vpnusersdb/" + name));
+                            User user = response.Result.ResultAs<User>();
+                            if (user.Password == password)
+                            {
+                                timer.Start();
+                                downloadWindow.Show();
+                                mainWindow = new MainWindow(user);
+                                Close();
+                         
+  
+         
+                            }         
+                        }
+                        catch
+                        {
+
                         }
                     }
-                    catch
-                    {
-
-                    }
+                 
                 }
-
             }
+          
+
+            
             #endregion
 
             //User user = new User();
@@ -99,6 +124,23 @@ namespace LodeVpn
             //user.DaysSubscibe = 30;
             //user.DayBuySubcribe = new DateTime(2022,11,1);
             //var result = client.SetAsync(@"vpnusersdb/" + "prem", user);
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            downloadWindow.Close();
+            mainWindow.Show();
+            timer.Stop();
+
+        }
+        private void TimerLoading_Tick(object sender, EventArgs e)
+        {
+            loginBtn.Visibility = Visibility.Visible;
+            progressBarLoading.Visibility = Visibility.Collapsed;
+            mainWindow.Show();
+            Close();
+            timerLoadingLogin.Stop();
+
         }
 
         #region Interner connection
@@ -154,18 +196,22 @@ namespace LodeVpn
         #region Login button
         private void LoginBtn_Click(object sender, RoutedEventArgs e)
         {
-
-
             if (IsConnectedToInternet())
             {
                 try
                 {
+
                     var response = client.GetAsync((@"vpnusersdb/" + txtUser.Text));
                     User user = response.Result.ResultAs<User>();
                     if (user != null)
                     {
                         if (txtPass.Password == user.Password)
                         {
+                            progressBarLoading.Visibility = Visibility.Visible;
+                            loginBtn.Visibility = Visibility.Collapsed;
+                            mainWindow = new MainWindow(user);
+                            timerLoadingLogin.Start();
+
                             textInvalid.Visibility = Visibility.Collapsed;
                             textInvalid.Foreground = System.Windows.Media.Brushes.LightGreen;
                             textInvalid.Text = "Succefull!";
@@ -178,9 +224,6 @@ namespace LodeVpn
                                     writer.WriteLine(user.Password);
                                 }
                             }
-                            MainWindow main = new MainWindow(user);
-                            main.Show();
-                            Close();
                         }
                         else
                         {

@@ -33,6 +33,7 @@ using Microsoft.Win32;
 using System.Xml.Linq;
 using System.Diagnostics.Contracts;
 using FireSharp.Response;
+using ProgressBar = System.Windows.Controls.ProgressBar;
 
 namespace LodeVpn
 {
@@ -46,7 +47,8 @@ namespace LodeVpn
     {
 
         private bool autoRun;
-        private bool saveMe;
+
+        public bool loadWindow = false;
 
         private static string FolderPath => string.Concat(Directory.GetCurrentDirectory(), "\\VPN");
         private string host = "PL226.vpnbook.com";
@@ -58,6 +60,7 @@ namespace LodeVpn
 
         private DispatcherTimer timer = new DispatcherTimer(DispatcherPriority.Send);
         private DispatcherTimer timerInternet = new DispatcherTimer(DispatcherPriority.Send);
+        private DispatcherTimer timerLoadingVpn = new DispatcherTimer(DispatcherPriority.Send);
         private DateTime dateTime = new DateTime(0, 0);
 
         public User user = new User();
@@ -70,20 +73,20 @@ namespace LodeVpn
         };
         private FirebaseClient client;
 
-
-
+       
 
         public MainWindow(User user)
         {
             //когда кто то покупает премиум то isPremium = true, daysubribe = сколько дней подписка, а daybuysubcribe = день покупки 
-
-
-
-            client = new FirebaseClient(config);
+            
 
             this.user = user;
 
             InitializeComponent();
+
+            client = new FirebaseClient(config);
+
+ 
 
             #region Other
 
@@ -94,6 +97,9 @@ namespace LodeVpn
             #region Timer interval
             timer.Interval = new TimeSpan(0, 0, 0, 1);
             timer.Tick += Timer_Tick;
+
+            timerLoadingVpn.Interval = new TimeSpan(0, 0,12);
+            timerLoadingVpn.Tick += TimerLoading_Tick;
 
             timerInternet.Interval = new TimeSpan(0, 1, 0);
             timerInternet.Tick += Timer_TickInternet;
@@ -239,6 +245,20 @@ namespace LodeVpn
             timerLabel.Content = "Duration: " + dateTime.ToLongTimeString();
             timerLabel.Foreground = Brushes.White;
         }
+        private void TimerLoading_Tick(object sender, EventArgs e)
+        {
+            gridOnOffVPN.Children.Add(onOffButton);
+            progressBarLoading.Visibility = Visibility.Collapsed;
+            dateTime = new DateTime(0, 0);
+            connectRadioBtn.Background = new SolidColorBrush(Color.FromRgb(5, 196, 33));
+            disconnectRadioBtn.Background = new SolidColorBrush(Color.FromRgb(56, 56, 56));
+            disconConnecLabel.Content = "Connected";
+            disconConnecLabel.Foreground = new SolidColorBrush(Color.FromRgb(5, 196, 33));
+            funcComboBox();
+            timer.Start();
+
+            timerLoadingVpn.Stop();
+        }
         private void Timer_TickInternet(object sender, EventArgs e)
         {
             //PerformanceCounterCategory performanceCounterCategory = new PerformanceCounterCategory("Network Interface");
@@ -280,7 +300,7 @@ namespace LodeVpn
                 StartInfo =
                 {
                     FileName = FolderPath + "\\VpnConnection.bat",
-                    WindowStyle = ProcessWindowStyle.Normal
+                    WindowStyle = ProcessWindowStyle.Hidden
                 }
             };
             newProcess.Start();
@@ -407,16 +427,12 @@ namespace LodeVpn
             {
                 if (onOffButton.IsChecked == true)
                 {
-                    dateTime = new DateTime(0, 0);
-                    connectRadioBtn.Background = new SolidColorBrush(Color.FromRgb(5, 196, 33));
-                    disconnectRadioBtn.Background = new SolidColorBrush(Color.FromRgb(56, 56, 56));
-                    disconConnecLabel.Content = "Connected";
-                    disconConnecLabel.Foreground = new SolidColorBrush(Color.FromRgb(5, 196, 33));
+                    timerLoadingVpn.Start();  
+                    gridOnOffVPN.Children.Remove(onOffButton);
+                    progressBarLoading.Visibility = Visibility.Visible;
 
                     Task.Factory.StartNew(new Action(Connect));
-                    timer.Start();
                     comboBoxHostName.IsReadOnly = true;
-                    funcComboBox();
                     timerInternet.Start();
 
                 }
@@ -576,7 +592,7 @@ namespace LodeVpn
         }
         public void setSaveMe(bool saveME)
         {
-            if (saveMe)
+            if (saveME)
             {
                 using (StreamWriter writer = new StreamWriter("LogFiles.txt", false))
                 {
@@ -597,17 +613,13 @@ namespace LodeVpn
         {
 
 
-            if (saveMe == true)
+            if (SaveMeToggleButton.IsChecked == true)
             {
-                setSaveMe(false);
-                saveMe = false;
-                MessageBox.Show("true");
+                setSaveMe(true);
             }
             else
             {
-                setSaveMe(true);
-                saveMe = true;
-                MessageBox.Show("false");
+                setSaveMe(false);
             }
         }
         #endregion

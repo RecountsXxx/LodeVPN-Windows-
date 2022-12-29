@@ -40,7 +40,8 @@
                 <TextBlock MouseEnter="ForgotPassword_MouseEnter" Cursor="Hand" Foreground="DarkGray" FontSize="14" Text="Forgot password?" FontWeight="Medium" FontFamily="Montserrat" Margin="53,245,329,62"></TextBlock>
                 <TextBlock MouseEnter="CreateAccount_MouseEnter" Cursor="Hand" Foreground="DarkGray" FontSize="14" Text="Create account?" FontWeight="Medium" FontFamily="Montserrat" Margin="342,245,57,62"></TextBlock>
                 <TextBlock  Foreground="DarkGray" FontSize="14" Text="Remember me" FontWeight="Medium" FontFamily="Montserrat" Margin="53,173,77,135"/>
-                <Button Template="{StaticResource loginButton }"  Cursor="Hand" Content="Login" Margin="182,195,182,95" Click="LoginBtn_Click"/>
+                <Button x:Name="loginBtn" Template="{StaticResource loginButton }"  Cursor="Hand" Content="Login" Margin="182,195,182,95" Click="LoginBtn_Click"/>
+                <ProgressBar Visibility="Collapsed" x:Name="progressBarLoading" Style="{DynamicResource  RoundProgressBarStyle }" IsIndeterminate="True"  Cursor="Hand" Margin="182,195,182,95" />
                 <TextBlock Visibility="Hidden" x:Name="textInvalid"  Foreground="OrangeRed" FontSize="14" Text="Incorrect login or password" FontWeight="Medium" FontFamily="Montserrat" Margin="167,154,-37,154"/>
             </Grid>
         </Border>
