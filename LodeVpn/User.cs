@@ -11,11 +11,10 @@ namespace LodeVpn
         public string Name { get; set; }
         public string Gmail { get; set; }
         public string Password { get; set; }
-        public DateTime Created { get; set; }
         public bool IsPremium { get; set; }
-   public int UsedInternet { get; set; }
+        public int DayBuySubcribe{ get; set; }
         public DateTime DaysForFreePlan { get; set; }
-        public int DaysSubscibe { get; set; }
-        public DateTime DayBuySubcribe { get; set; }
+        public DateTime DaysBuySubcribe { get; set; }
+        public DateTime Created { get; set; }
     }
 }

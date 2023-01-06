@@ -14,7 +14,7 @@
     <Grid Background="#FF1C2328">
 
         <TabControl x:Name="tabControl" TabStripPlacement="Left" Background="#FF1C2328" BorderBrush="#FF1C2328">
-            <TabItem Template="{StaticResource tabItemTemplate}"   Margin="0,25,2,-41" >
+            <TabItem Template="{StaticResource tabItemTemplate}"   Margin="0,25,2,-44" >
                 <TabItem.Background>
                     <ImageBrush Stretch="Uniform" ImageSource="Images/home.png"></ImageBrush>
                 </TabItem.Background>
@@ -171,7 +171,7 @@
 
 
 
-            <TabItem Template="{StaticResource tabItemTemplate}"     Margin="0,56,2,-72" >
+            <TabItem Template="{StaticResource tabItemTemplate}"     Margin="0,56,0,-79" >
                 <TabItem.Background>
                     <ImageBrush Stretch="Uniform" ImageSource="/Images/settings.png"/>
                 </TabItem.Background>
@@ -202,20 +202,15 @@
                             <ToggleButton x:Name="LaunchAppWitStart" Margin="352,22,10,13" Click="LaunchAppWitStart_Click"></ToggleButton>
                             <TextBlock  FontSize="16" Foreground="LightGray" VerticalAlignment="Center" Text="Save me" Margin="10,0,169,0" Grid.Row="1"/>
                             <ToggleButton x:Name="SaveMeToggleButton" Margin="352,22,10,13" Grid.Row="1" Click="SaveMeToggleButton_Click" />
-                            <TextBlock  FontSize="16" Foreground="LightGray" VerticalAlignment="Center" Text="Add setting" Margin="10,0,169,0" Grid.Row="2"/>
-                            <ToggleButton Margin="352,22,10,13" Grid.Row="2"/>
-                            <TextBlock  FontSize="16" Foreground="LightGray" VerticalAlignment="Center" Text="Add setting" Margin="10,0,169,0" Grid.Row="3"/>
-                            <ToggleButton Margin="352,22,10,13" Grid.Row="3" />
-                            <TextBlock  FontSize="16" Foreground="LightGray" VerticalAlignment="Center" Text="Add setting" Margin="10,0,169,0" Grid.Row="4"/>
-                            <ToggleButton Margin="352,22,10,13" Grid.Row="4" />
+                           
 
                         </Grid>
                     </Border>
                 </Grid>
             </TabItem>
-            <TabItem Template="{StaticResource tabItemTemplate}"    Margin="0,86,2,-102" >
+            <TabItem Template="{StaticResource tabItemTemplate}"    Margin="0,86,1,-106" >
                 <TabItem.Background>
-                    <ImageBrush Stretch="Uniform" ImageSource="/Images/user.png"/>
+                    <ImageBrush Stretch="Uniform" ImageSource="/Images/account.png"/>
                 </TabItem.Background>
                 <Grid>
                     <Grid.RowDefinitions>
@@ -246,7 +241,7 @@
                             <TextBlock x:Name="loginAccount"  Grid.Row="0" VerticalAlignment="Center" FontSize="16" Margin="12,0,0,0" Foreground="LightGray" Text="bohdankomp228@gmail.com"></TextBlock>
                             <TextBlock x:Name="planAccount" Grid.Row="1" VerticalAlignment="Center" FontSize="16" Foreground="LightGray" Margin="12,0,0,0" Text="Plan: Free plan"></TextBlock>
                             <TextBlock x:Name="expiresAccount" Grid.Row="2" VerticalAlignment="Center" FontSize="16" Foreground="LightGreen" Margin="12,0,0,0" Text="Expires on: December 31, 2022"></TextBlock>
-                            <TextBlock x:Name="usedAccount" Grid.Row="3" VerticalAlignment="Center" FontSize="16" Foreground="LightGray" Margin="12,0,0,0" Text="This month used 4 MB out of 10GB."></TextBlock>
+                            <TextBlock x:Name="createdAccountText" Grid.Row="3" VerticalAlignment="Center" FontSize="16" Foreground="LightGray" Margin="12,0,0,0" Text="Account created: 19.09.2023"></TextBlock>
                             <TextBlock Grid.Row="4" VerticalAlignment="Center" FontSize="13" Foreground="Wheat" Text="If you buy a subscription from Lode VPN, then the IP addresses will be  protected, your subscription purchase is valid on all platforms." Margin="13,0,0,0" TextWrapping="WrapWithOverflow" Height="50"></TextBlock>
                             <Button x:Name="upgradeBtn" Grid.Row="4" Template="{StaticResource ugradeButton}"  Content="Upgrade" Background="LightGreen" Margin="117,41,143,0" Grid.RowSpan="2" Click="upgradeBtn_Click"></Button>
                         </Grid>
@@ -254,7 +249,7 @@
                     <Border Grid.Row="2" Background="#FF293036"></Border>
                 </Grid>
             </TabItem>
-            <TabItem Template="{StaticResource tabItemTemplate}"  Margin="0,120,2,-136" >
+            <TabItem Template="{StaticResource tabItemTemplate}"  Margin="0,120,0,-140" >
                 <TabItem.Background>
                     <ImageBrush Stretch="Uniform" ImageSource="/Images/info.png"/>
                 </TabItem.Background>
@@ -287,13 +282,13 @@ Made for online security, for anonymity on the web, has a pretty good internet s
                             <TextBlock Margin="10,5,5,5" FontSize="18"  Foreground="LightGray" Grid.Row="1" Text="Version 1.0.0"></TextBlock>
                             <TextBlock Margin="10,0,5,5" Cursor="Hand" FontSize="18"  Foreground="LightGray" Grid.Row="2" Text="Follow me"></TextBlock>
                             <TextBlock  MouseDown="TextBlock_Telegram" Cursor="Hand" FontSize="18"  Foreground="LightGray" Grid.Row="2" Text="Telegram : t.me/LodeVPN" Margin="10,34,152,46"></TextBlock>
-                            <TextBlock  MouseDown="TextBlock_Gmail" Cursor="Hand" FontSize="18"  Foreground="LightGray" Grid.Row="2" Text="Site : BogdanKapriyanUA@gmail.com" Margin="10,67,88,10"></TextBlock>
+                            <TextBlock MouseLeftButtonDown="TextBlock_MouseLeftButtonDown" MouseDown="TextBlock_Gmail" Cursor="Hand" FontSize="18"  Foreground="LightGray" Grid.Row="2" Text="Site : http://lodevpn.zzz.com.ua" Margin="10,67,63,10"></TextBlock>
                         </Grid>
 
                     </Border>
                 </Grid>
             </TabItem>
-            <TabItem Template="{StaticResource tabItemTemplate}" Margin="2,152,0,-168" MouseLeftButtonUp="TabItem_MouseLeftButtonUp" >
+            <TabItem Template="{StaticResource tabItemTemplate}" Margin="5,152,-5,-171" MouseLeftButtonUp="TabItem_MouseLeftButtonUp" >
                 <TabItem.Background>
                     <ImageBrush Stretch="Uniform" ImageSource="/Images/exit.png"/>
                 </TabItem.Background>

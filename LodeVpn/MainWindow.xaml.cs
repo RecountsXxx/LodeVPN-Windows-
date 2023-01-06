@@ -1,39 +1,21 @@
-﻿using FireSharp.Config;
-using FireSharp;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
-using System.Windows.Media.Animation;
 using MessageBox = System.Windows.Forms.MessageBox;
 using System.Security.Cryptography;
 using System.Reflection;
 using Microsoft.Win32;
-using System.Xml.Linq;
-using System.Diagnostics.Contracts;
-using FireSharp.Response;
-using ProgressBar = System.Windows.Controls.ProgressBar;
+using FirebaseClient = FireSharp.FirebaseClient;
+using FirebaseConfig = FireSharp.Config.FirebaseConfig;
 
 namespace LodeVpn
 {
@@ -48,8 +30,6 @@ namespace LodeVpn
 
         private bool autoRun;
 
-        public bool loadWindow = false;
-
         private static string FolderPath => string.Concat(Directory.GetCurrentDirectory(), "\\VPN");
         private string host = "PL226.vpnbook.com";
 
@@ -59,12 +39,10 @@ namespace LodeVpn
         private System.Windows.Forms.NotifyIcon notify = new NotifyIcon();
 
         private DispatcherTimer timer = new DispatcherTimer(DispatcherPriority.Send);
-        private DispatcherTimer timerInternet = new DispatcherTimer(DispatcherPriority.Send);
         private DispatcherTimer timerLoadingVpn = new DispatcherTimer(DispatcherPriority.Send);
         private DateTime dateTime = new DateTime(0, 0);
 
         public User user = new User();
-
 
         private FirebaseConfig config = new FirebaseConfig
         {
@@ -72,26 +50,21 @@ namespace LodeVpn
             BasePath = "https://vpnusersdb-default-rtdb.europe-west1.firebasedatabase.app/"
         };
         private FirebaseClient client;
-
-       
-
+     
         public MainWindow(User user)
         {
             //когда кто то покупает премиум то isPremium = true, daysubribe = сколько дней подписка, а daybuysubcribe = день покупки 
-            
+            //сделать забыл пароль, и так далее
 
             this.user = user;
 
             InitializeComponent();
-
             client = new FirebaseClient(config);
-
- 
 
             #region Other
 
             Window = this;
-            comboBoxHostName.SelectedIndex = 3;
+      
             #endregion
 
             #region Timer interval
@@ -100,10 +73,6 @@ namespace LodeVpn
 
             timerLoadingVpn.Interval = new TimeSpan(0, 0,12);
             timerLoadingVpn.Tick += TimerLoading_Tick;
-
-            timerInternet.Interval = new TimeSpan(0, 1, 0);
-            timerInternet.Tick += Timer_TickInternet;
-            timerInternet.Start();
             #endregion
 
             #region Get ip-adress
@@ -166,14 +135,14 @@ namespace LodeVpn
             expires = user.Created;
             if (user.IsPremium == true)
             {
-                expires = user.DayBuySubcribe;
-                expires = expires.AddDays(user.DaysSubscibe);
+                expires = user.DaysBuySubcribe;
+                expires = expires.AddDays(user.DayBuySubcribe);
             }
             else
                 expires = expires.AddDays(10);
             user.DaysForFreePlan = expires;
             expiresAccount.Text = "Expiries on: " + user.DaysForFreePlan.ToShortDateString();
-            usedAccount.Text = "You used " + user.UsedInternet + "MB out of 10GB internet.";
+            createdAccountText.Text = "Account created: " + user.Created.ToShortDateString();
             var result = client.Update(@"vpnusersdb/" + user.Name, user);
 
             if (user.IsPremium == true)
@@ -196,7 +165,6 @@ namespace LodeVpn
             {
                 if (DateTime.Now >= user.DaysForFreePlan)
                 {
-                    //перекидыввать на страницу покупки
                     expiresAccount.Text = "Subscription ended.";
                     MessageBox.Show("Unfortunately, your subscription is over.", "Information", MessageBoxButtons.OK, (MessageBoxIcon)MessageBoxImage.Information); ;
                     planAccount.Text = "Plan: " + "Subscription ended.";
@@ -206,6 +174,7 @@ namespace LodeVpn
                     premiumHost0.IsEnabled = false;
                     premiumHost1.IsEnabled = false;
                     premiumHost2.IsEnabled = false;
+                    Process.Start("http://lodevpn.zzz.com.ua/subsribe.html");
                 }
 
             }
@@ -213,7 +182,6 @@ namespace LodeVpn
             {
                 if (DateTime.Now >= user.DaysForFreePlan)
                 {
-                    //перекидыввать на страницу покупки
                     MessageBox.Show("Unfortunately, your trial period is over.", "Information", MessageBoxButtons.OK, (MessageBoxIcon)MessageBoxImage.Information); ;
                     tabControl.SelectedIndex = 2;
                     planAccount.Text = "Plan: " + "Trial period is over.";
@@ -223,16 +191,7 @@ namespace LodeVpn
                     premiumHost0.IsEnabled = false;
                     premiumHost1.IsEnabled = false;
                     premiumHost2.IsEnabled = false;
-                }
-                if (user.UsedInternet >= 10000)
-                {
-                    //перекидыввать на страницу покупки
-                    MessageBox.Show("Unfortunately, you spent all the Internet available to you in the trial period.", "Information", MessageBoxButtons.OK, (MessageBoxIcon)MessageBoxImage.Information); ;
-                    tabControl.SelectedIndex = 2;
-                    planAccount.Text = "Plan: " + "The Internet in use has ended.";
-                    expiresAccount.Text = "Trail period ended.";
-                    trailTextBlock.Visibility = Visibility.Visible;
-                    onOffButton.IsEnabled = false;
+                    Process.Start("http://lodevpn.zzz.com.ua/subsribe.html");
                 }
             }
             #endregion
@@ -259,19 +218,9 @@ namespace LodeVpn
 
             timerLoadingVpn.Stop();
         }
-        private void Timer_TickInternet(object sender, EventArgs e)
-        {
-            //PerformanceCounterCategory performanceCounterCategory = new PerformanceCounterCategory("Network Interface");
-            //string instance = "WAN [PPP_SLIP] Interface"; //либо так
-            //PerformanceCounter performanceCounterSent = new PerformanceCounter("Network Interface", "Bytes Sent/sec", instance);
-            //PerformanceCounter performanceCounterReceived = new PerformanceCounter("Network Interface", "Bytes Received/sec", instance);
-
-            //    Console.WriteLine("bytes sent: {0}k\tbytes received: {1}k", performanceCounterSent.NextValue() / 1024, performanceCounterReceived.NextValue() / 1024);
-        }
         #endregion 
 
         #region VPN Functions
-
         public void Connect()
         {
 
@@ -323,7 +272,6 @@ namespace LodeVpn
             newProcess.Start();
             newProcess.WaitForExit();
         }
-
         private void funcComboBox()
         {
             if (comboBoxHostName.SelectedIndex == 0)
@@ -368,7 +316,6 @@ namespace LodeVpn
                 ipAdressTextTwo.Text = "Protected IP: ";
             }
         }
-
         private void comboBoxHostName_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //TYT POMENYAT
@@ -414,13 +361,11 @@ namespace LodeVpn
         #region On Off VPN
         [DllImport("wininet.dll")]
         private extern static bool InternetGetConnectedState(out int Description, int ReservedValue);
-
         public static bool IsConnectedToInternet()
         {
             int Desc;
             return InternetGetConnectedState(out Desc, 0);
         }
-
         private void OnOffVpn_Click(object sender, RoutedEventArgs e)
         {
             if (IsConnectedToInternet())
@@ -433,7 +378,6 @@ namespace LodeVpn
 
                     Task.Factory.StartNew(new Action(Connect));
                     comboBoxHostName.IsReadOnly = true;
-                    timerInternet.Start();
 
                 }
                 else
@@ -449,7 +393,6 @@ namespace LodeVpn
                     ipAdressTextTwo.Text = "    Public IP: ";
                     comboBoxHostName.IsReadOnly = false;
                     timerLabel.Content = "";
-                    timerInternet.Stop();
                 }
             }
             else
@@ -464,7 +407,6 @@ namespace LodeVpn
                 disconConnecLabel.Foreground = Brushes.Red;
                 timer.Stop();
                 comboBoxHostName.IsReadOnly = false;
-                timerInternet.Stop();
             }
            
         }
@@ -501,7 +443,6 @@ namespace LodeVpn
             notify.Visible = false;
             Environment.Exit(0);
         }
-
         private void hideButton_Click(object sender, RoutedEventArgs e)
         {
 
@@ -514,7 +455,6 @@ namespace LodeVpn
             notify.ShowBalloonTip(2, "Free VPN", "VPN will run in the background", ToolTipIcon.Info);
             Hide();
         }
-
         private void Drag(object sender, RoutedEventArgs e)
         {
             if (Mouse.LeftButton == MouseButtonState.Pressed)
@@ -529,14 +469,21 @@ namespace LodeVpn
         #endregion
 
         #region Links
+        private void TextBlock_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            Process.Start("http://lodevpn.zzz.com.ua");
+        }
         private void TabItem_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            LoginForm form = new LoginForm(true);
+            using (StreamWriter writer = new StreamWriter("LogFiles.txt", false))
+            {
+                writer.WriteLine("qwe");
+            }
+            LoginForm form = new LoginForm();
             form.Show();
             Close();
 
         }
-
         private void TextBlock_Gmail(object sender, MouseButtonEventArgs e)
         {
 
@@ -547,9 +494,7 @@ namespace LodeVpn
         }
         #endregion
 
-        #region settings
-
-
+        #region Settings
         private void LaunchAppWitStart_Click(object sender, RoutedEventArgs e)
         {
 
@@ -624,55 +569,13 @@ namespace LodeVpn
         }
         #endregion
 
-
+        #region Upgrade
         private void upgradeBtn_Click(object sender, RoutedEventArgs e)
         {
-
-        }
-
-        #region Encrypt and decrypt
-        public static byte[] RSAEncrypt(byte[] DataToEncrypt, RSAParameters RSAKeyInfo, bool DoOAEPPadding)
-        {
-            try
-            {
-                byte[] encryptedData;
-                using (RSACryptoServiceProvider RSA = new RSACryptoServiceProvider())
-                {
-                    RSA.ImportParameters(RSAKeyInfo);
-                    encryptedData = RSA.Encrypt(DataToEncrypt, DoOAEPPadding);
-                }
-                return encryptedData;
-            }
-            catch (CryptographicException e)
-            {
-                Console.WriteLine(e.Message);
-
-                return null;
-            }
-        }
-
-        public static byte[] RSADecrypt(byte[] DataToDecrypt, RSAParameters RSAKeyInfo, bool DoOAEPPadding)
-        {
-            try
-            {
-                byte[] decryptedData;
-                using (RSACryptoServiceProvider RSA = new RSACryptoServiceProvider())
-                {
-                    RSA.ImportParameters(RSAKeyInfo);
-                    decryptedData = RSA.Decrypt(DataToDecrypt, DoOAEPPadding);
-                }
-                return decryptedData;
-            }
-            catch (CryptographicException e)
-            {
-                Console.WriteLine(e.ToString());
-
-                return null;
-            }
+            Process.Start("http://lodevpn.zzz.com.ua/subsribe.html");
         }
         #endregion
 
 
-    
     }
 }
