@@ -37,8 +37,8 @@
 
                 <TextBlock  Foreground="DarkGray" FontSize="14" Text="Remember me" FontWeight="Medium" FontFamily="Montserrat" Margin="53,173,77,135"></TextBlock>
                 <CheckBox x:Name="checkBoxRememberMe" Cursor="Hand" Margin="428,173,57,135"></CheckBox>
-                <TextBlock MouseEnter="ForgotPassword_MouseEnter" Cursor="Hand" Foreground="DarkGray" FontSize="14" Text="Forgot password?" FontWeight="Medium" FontFamily="Montserrat" Margin="53,245,329,62"></TextBlock>
-                <TextBlock  MouseEnter="CreateAccount_MouseEnter" Cursor="Hand" Foreground="DarkGray" FontSize="14" Text="Create account?" FontWeight="Medium" FontFamily="Montserrat" Margin="342,245,57,62"></TextBlock>
+                <TextBlock MouseDown="ForgotPassword_MouseEnter" Cursor="Hand" Foreground="DarkGray" FontSize="14" Text="Forgot password?" FontWeight="Medium" FontFamily="Montserrat" Margin="53,245,329,62"></TextBlock>
+                <TextBlock  MouseDown="CreateAccount_MouseEnter" Cursor="Hand" Foreground="DarkGray" FontSize="14" Text="Create account?" FontWeight="Medium" FontFamily="Montserrat" Margin="342,245,57,62"></TextBlock>
                 <TextBlock  Foreground="DarkGray" FontSize="14" Text="Remember me" FontWeight="Medium" FontFamily="Montserrat" Margin="53,173,77,135"/>
                 <Button x:Name="loginBtn" Template="{StaticResource loginButton }"  Cursor="Hand" Content="Login" Margin="182,195,182,95" Click="LoginBtn_Click"/>
                 <ProgressBar Visibility="Collapsed" x:Name="progressBarLoading" Style="{DynamicResource  RoundProgressBarStyle }" IsIndeterminate="True"  Cursor="Hand" Margin="182,195,182,95" />
