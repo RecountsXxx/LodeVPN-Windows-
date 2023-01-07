@@ -54,7 +54,6 @@ namespace LodeVpn
         public MainWindow(User user)
         {
             //когда кто то покупает премиум то isPremium = true, daysubribe = сколько дней подписка, а daybuysubcribe = день покупки 
-            //сделать забыл пароль, и так далее
 
             this.user = user;
 
