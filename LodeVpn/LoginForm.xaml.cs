@@ -173,11 +173,12 @@ namespace LodeVpn
                         if (txtPass.Password == user.Password)
                         {
                             progressBarLoading.Visibility = Visibility.Visible;
-                            loginBtn.Visibility = Visibility.Collapsed;
-                            mainWindow = new MainWindow(user);
-                            timerLoadingLogin.Start();
+                        loginBtn.Visibility = Visibility.Collapsed;
+                        mainWindow = new MainWindow(user);
+ 
+                        timerLoadingLogin.Start();
 
-                            textInvalid.Visibility = Visibility.Collapsed;
+                        textInvalid.Visibility = Visibility.Collapsed;
                             textInvalid.Foreground = System.Windows.Media.Brushes.LightGreen;
                             textInvalid.Text = "Succefull!";
                             if (checkBoxRememberMe.IsChecked == true)

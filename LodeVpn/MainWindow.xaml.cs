@@ -16,6 +16,7 @@ using System.Reflection;
 using Microsoft.Win32;
 using FirebaseClient = FireSharp.FirebaseClient;
 using FirebaseConfig = FireSharp.Config.FirebaseConfig;
+using System.Net;
 
 namespace LodeVpn
 {
@@ -37,6 +38,8 @@ namespace LodeVpn
 
         private System.Windows.Forms.ContextMenuStrip contextMenu = new System.Windows.Forms.ContextMenuStrip();
         private System.Windows.Forms.NotifyIcon notify = new NotifyIcon();
+
+        private WebClient clientWeb = new WebClient();
 
         private DispatcherTimer timer = new DispatcherTimer(DispatcherPriority.Send);
         private DispatcherTimer timerLoadingVpn = new DispatcherTimer(DispatcherPriority.Send);
@@ -60,6 +63,10 @@ namespace LodeVpn
             InitializeComponent();
             client = new FirebaseClient(config);
 
+            #region Update
+      
+            #endregion
+
             #region Other
 
             Window = this;
@@ -80,9 +87,9 @@ namespace LodeVpn
             #endregion
 
             #region ContextMenu
-            contextMenu.Items.Add("Show", System.Drawing.Image.FromFile(@"..\..\Images\visual.png"), new EventHandler(showMenuItem));
-            contextMenu.Items.Add("Disconnect", System.Drawing.Image.FromFile(@"..\..\\Images\disconnect.png"), new EventHandler(disconnectMenuItem));
-            contextMenu.Items.Add("Exit", System.Drawing.Image.FromFile(@"..\..\Images\exitTray.png"), new EventHandler(exitMenuItem));
+            contextMenu.Items.Add("Show", System.Drawing.Image.FromFile(@"Images\visual.png"), new EventHandler(showMenuItem));
+            contextMenu.Items.Add("Disconnect", System.Drawing.Image.FromFile(@"Images\disconnect.png"), new EventHandler(disconnectMenuItem));
+            contextMenu.Items.Add("Exit", System.Drawing.Image.FromFile(@"Images\exitTray.png"), new EventHandler(exitMenuItem));
             notify.ContextMenuStrip = contextMenu;
             #endregion
 
@@ -446,7 +453,7 @@ namespace LodeVpn
         {
 
             //help
-            notify.Icon = new System.Drawing.Icon(@"..\..\Images\LogoIcons.ico");
+            notify.Icon = new System.Drawing.Icon(@"Images\LogoIcons.ico");
             notify.Visible = true;
             notify.Text = "Free VPN";
             ShowInTaskbar = false;
@@ -490,6 +497,22 @@ namespace LodeVpn
         private void TextBlock_Telegram(object sender, MouseButtonEventArgs e)
         {
             Process.Start("https://t.me/+xqhnK555QPo1YTYy");
+        }
+        private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (clientWeb.DownloadString("https://pastebin.com/raw/BQDH67Ky").Contains("1"))
+            {
+                MessageBox.Show("\r\nYou have the latest version.", "Update", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            }
+            else
+            {
+                DialogResult results = MessageBox.Show("A new update is available.\nDo you want to install it?", "Update", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (results == System.Windows.Forms.DialogResult.Yes)
+                {
+                    Process.Start("lodevpn.zzz.com.ua/downloads.html");
+                }
+
+            }
         }
         #endregion
 
@@ -573,8 +596,9 @@ namespace LodeVpn
         {
             Process.Start("http://lodevpn.zzz.com.ua/subsribe.html");
         }
+
         #endregion
 
-
+  
     }
 }

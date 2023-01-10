@@ -280,6 +280,8 @@
 Made for online security, for anonymity on the web, has a pretty good internet speed, servers on all continents except Antarctica and Africa) If you like my product, you can write to Gmail, I will issue a premium account)" Foreground="LightGray" TextWrapping="WrapWithOverflow"/>
 
                             <TextBlock Margin="10,5,5,5" FontSize="18"  Foreground="LightGray" Grid.Row="1" Text="Version 1.0.0"></TextBlock>
+                            <TextBlock MouseDown="TextBlock_MouseDown" Margin="10,5,5,5" FontSize="18"  Foreground="LightGray" Grid.Row="1" Text="            
+                                            Check updates"></TextBlock>
                             <TextBlock Margin="10,0,5,5" Cursor="Hand" FontSize="18"  Foreground="LightGray" Grid.Row="2" Text="Follow me"></TextBlock>
                             <TextBlock  MouseDown="TextBlock_Telegram" Cursor="Hand" FontSize="18"  Foreground="LightGray" Grid.Row="2" Text="Telegram : t.me/LodeVPN" Margin="10,34,152,46"></TextBlock>
                             <TextBlock MouseLeftButtonDown="TextBlock_MouseLeftButtonDown" MouseDown="TextBlock_Gmail" Cursor="Hand" FontSize="18"  Foreground="LightGray" Grid.Row="2" Text="Site : http://lodevpn.zzz.com.ua" Margin="10,67,63,10"></TextBlock>
