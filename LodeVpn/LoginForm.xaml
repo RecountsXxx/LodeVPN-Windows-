@@ -13,7 +13,7 @@
         </Grid.RowDefinitions>
         <Border Grid.Row="0" Background="#FF293036">
             <Grid>
-                <Image Source="Images/logo.png" Margin="123,-18,123,-16"/>
+                <Image Source="Images/logo.png" Margin="123,-18,123,-12"/>
                 <Button x:Name="hideButton" Template="{StaticResource buttonHideTemplate}" Content="-" Margin="425,21,45,23" Click="hideButton_Click"></Button>
                 <Button x:Name="closeButton" Template="{StaticResource buttonCloseTemplate}" Content="X" Margin="460,21,10,23" Background="#FFED3939" Click="closeButton_Click"/>
             </Grid>

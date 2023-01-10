@@ -1,6 +1,4 @@
-﻿
-using Firebase.Auth;
-using FireSharp;
+﻿using FireSharp;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -34,7 +32,7 @@ namespace LodeVpn
             BasePath = "https://vpnusersdb-default-rtdb.europe-west1.firebasedatabase.app/"
         };
         private FirebaseClient client;
-        private FirebaseAuthProvider provider = new FirebaseAuthProvider(new FirebaseConfig("4mdEj7Nj6jotaEuulLIJb7YKIHRZY"));
+       
 
 
         public LoginForm()

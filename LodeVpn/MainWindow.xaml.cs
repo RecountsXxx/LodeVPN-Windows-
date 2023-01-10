@@ -11,7 +11,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using MessageBox = System.Windows.Forms.MessageBox;
-using System.Security.Cryptography;
 using System.Reflection;
 using Microsoft.Win32;
 using FirebaseClient = FireSharp.FirebaseClient;
@@ -59,6 +58,7 @@ namespace LodeVpn
             //когда кто то покупает премиум то isPremium = true, daysubribe = сколько дней подписка, а daybuysubcribe = день покупки 
 
             this.user = user;
+
 
             InitializeComponent();
             client = new FirebaseClient(config);
@@ -201,6 +201,7 @@ namespace LodeVpn
                 }
             }
             #endregion
+
         }
 
         #region Timer Tick
@@ -374,47 +375,58 @@ namespace LodeVpn
         }
         private void OnOffVpn_Click(object sender, RoutedEventArgs e)
         {
-            if (IsConnectedToInternet())
+     
+            if(comboBoxHostName.SelectedIndex >= 0)
             {
-                if (onOffButton.IsChecked == true)
+                if (IsConnectedToInternet())
                 {
-                    timerLoadingVpn.Start();  
-                    gridOnOffVPN.Children.Remove(onOffButton);
-                    progressBarLoading.Visibility = Visibility.Visible;
+                    if (onOffButton.IsChecked == true)
+                    {
+                        timerLoadingVpn.Start();
+                        gridOnOffVPN.Children.Remove(onOffButton);
+                        progressBarLoading.Visibility = Visibility.Visible;
 
-                    Task.Factory.StartNew(new Action(Connect));
-                    comboBoxHostName.IsReadOnly = true;
+                        Task.Factory.StartNew(new Action(Connect));
+                        comboBoxHostName.IsReadOnly = true;
+
+                    }
+                    else
+                    {
+                        connectRadioBtn.Background = new SolidColorBrush(Color.FromRgb(56, 56, 56));
+                        disconnectRadioBtn.Background = Brushes.Red;
+                        disconConnecLabel.Content = "Disconnected";
+                        disconConnecLabel.Foreground = Brushes.Red;
+                        Task.Factory.StartNew(new Action(Disconnect));
+                        timer.Stop();
+                        string pubIp = new System.Net.WebClient().DownloadString("https://api.ipify.org");
+                        ipAdressText.Text = pubIp;
+                        ipAdressTextTwo.Text = "    Public IP: ";
+                        comboBoxHostName.IsReadOnly = false;
+                        timerLabel.Content = "";
+                    }
 
                 }
                 else
                 {
+                    onOffButton.IsChecked = false;
+                    timerLabel.Content = "   No internet.";
+                    timerLabel.Foreground = Brushes.Red;
                     connectRadioBtn.Background = new SolidColorBrush(Color.FromRgb(56, 56, 56));
+                    ipAdressTextTwo.Text = "    Public IP: ";
                     disconnectRadioBtn.Background = Brushes.Red;
                     disconConnecLabel.Content = "Disconnected";
                     disconConnecLabel.Foreground = Brushes.Red;
-                    Task.Factory.StartNew(new Action(Disconnect));
                     timer.Stop();
-                    string pubIp = new System.Net.WebClient().DownloadString("https://api.ipify.org");
-                    ipAdressText.Text = pubIp;
-                    ipAdressTextTwo.Text = "    Public IP: ";
                     comboBoxHostName.IsReadOnly = false;
-                    timerLabel.Content = "";
                 }
+
             }
             else
             {
                 onOffButton.IsChecked = false;
-                timerLabel.Content = "   No internet.";
-                timerLabel.Foreground = Brushes.Red;
-                connectRadioBtn.Background = new SolidColorBrush(Color.FromRgb(56, 56, 56));
-                ipAdressTextTwo.Text = "    Public IP: ";
-                disconnectRadioBtn.Background = Brushes.Red;
-                disconConnecLabel.Content = "Disconnected";
-                disconConnecLabel.Foreground = Brushes.Red;
-                timer.Stop();
-                comboBoxHostName.IsReadOnly = false;
             }
-           
+
+
         }
         #endregion
 

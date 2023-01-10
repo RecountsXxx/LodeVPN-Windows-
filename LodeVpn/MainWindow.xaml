@@ -114,7 +114,7 @@
 
 
 
-                            <ComboBoxItem Background="#FF293036">
+                            <ComboBoxItem x:Name="usaCombobox" Background="#FF293036">
                                 <Border>
                                     <Grid>
                                         <Image HorizontalAlignment="Left" Stretch="Uniform" Grid.Column="0" Width="50" Height="25" Source="\Images\usa.png"></Image>
