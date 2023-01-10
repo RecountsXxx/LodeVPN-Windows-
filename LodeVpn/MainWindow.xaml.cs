@@ -424,6 +424,7 @@ namespace LodeVpn
             else
             {
                 onOffButton.IsChecked = false;
+                MessageBox.Show("Please select country", "Erorr", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
 
 
