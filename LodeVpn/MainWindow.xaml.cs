@@ -87,9 +87,9 @@ namespace LodeVpn
             #endregion
 
             #region ContextMenu
-            contextMenu.Items.Add("Show", System.Drawing.Image.FromFile(@"Images\visual.png"), new EventHandler(showMenuItem));
-            contextMenu.Items.Add("Disconnect", System.Drawing.Image.FromFile(@"Images\disconnect.png"), new EventHandler(disconnectMenuItem));
-            contextMenu.Items.Add("Exit", System.Drawing.Image.FromFile(@"Images\exitTray.png"), new EventHandler(exitMenuItem));
+            contextMenu.Items.Add("Show", System.Drawing.Image.FromFile(@"..\..\Images\visual.png"), new EventHandler(showMenuItem));
+            contextMenu.Items.Add("Disconnect", System.Drawing.Image.FromFile(@"..\..\Images\disconnect.png"), new EventHandler(disconnectMenuItem));
+            contextMenu.Items.Add("Exit", System.Drawing.Image.FromFile(@"..\..\Images\exitTray.png"), new EventHandler(exitMenuItem));
             notify.ContextMenuStrip = contextMenu;
             #endregion
 
@@ -231,7 +231,7 @@ namespace LodeVpn
         public void Connect()
         {
 
-
+            string passwordVpnBook = "dd4e58m";
             if (!Directory.Exists(FolderPath))
                 Directory.CreateDirectory(FolderPath);
 
@@ -246,7 +246,7 @@ namespace LodeVpn
             File.WriteAllText(FolderPath + "\\VpnConnection.pbk", sb.ToString());
 
             sb = new StringBuilder();
-            sb.AppendLine("rasdial \"VPN\" " + "vpnbook" + " " + "rxtasfh" + " /phonebook:\"" + FolderPath +
+            sb.AppendLine("rasdial \"VPN\" " + "vpnbook" + " " + passwordVpnBook + " /phonebook:\"" + FolderPath +
                           "\\VpnConnection.pbk\"");
 
             File.WriteAllText(FolderPath + "\\VpnConnection.bat", sb.ToString());
